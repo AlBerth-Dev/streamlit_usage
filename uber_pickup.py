@@ -26,10 +26,17 @@ data = load_data(10000)
 # Notify the reader that the data was successfully loaded.
 data_load_state.text("Done! (using st.cache_data)")
 
-st.subheader("Raw data Example")
-st.write(data.head(10))
+# Add buttons
+if st.checkbox("Show Raw data Example"):
+    st.subheader("Raw data Example")
+    st.write(data.head(10))
 
 st.subheader('Number of pickups by hour')
 hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins = 24, range=(0,24))[0]
 st.bar_chart(hist_values)
 
+## How to make filters and interactive maps
+hour_to_filter = st.slider("Hour", 0,23,17) # Slide bar for interactivity
+filter_data = data[data[DATE_COLUMN].dt.hour==hour_to_filter]
+st.subheader(f'Map o all pickups at {hour_to_filter}:00')
+st.map(filter_data)
